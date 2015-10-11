@@ -39,7 +39,7 @@ You keep state in your front end application, so that a page refresh doesn't kic
 
 
 ##Notes for candidates
-If you're using this challenge as part of your technical evaluation, please fork this repository, create your solution as an AngularJS, Polymer, or React app and sent your repository url to matthias@supplyhub.com. Private repositories are also accepted, in that case give access to the GitHub username *manonthemat*.
+If you're using this challenge as part of your technical evaluation, please fork this repository, create your solution as an AngularJS, Polymer, or React app and send your repository url to matthias@supplyhub.com. Private repositories are also accepted, in that case give access to the GitHub username *manonthemat*.
 
 ##Bonus points
 
