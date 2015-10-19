@@ -22,7 +22,7 @@ You keep state in your front end application, so that a page refresh doesn't kic
 
 ##API point
 
-**GET** http://api.vip.supplyhub.com:9000/products
+**GET** http://api.vip.supplyhub.com:19000/products
 
 |query param|description               |notes                                       |
 |-----------|--------------------------|--------------------------------------------|
