@@ -12,9 +12,11 @@ angular.module('supplyhubApp')
   	var domain = CONFIG.api.domain;
   	
 
-  	function searchFor(product){
+  	function searchFor(product,skip){
+  		if (!product) return
   		console.info("searching for " + product);
-	  	return _http({"search": product}).then(function(data){
+  		var skip = skip || 0;
+	  	return _http({"search": product, limit:CONFIG.data.limit, skip:skip}).then(function(data){
 	  		return data;
 	  	});
   	}
