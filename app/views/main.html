@@ -1,10 +1,10 @@
 <form>
 	<label>Search
-	<input type="text" ng-model="product">&nbsp;<button class="btn btn-primary" ng-click="searchFor(product)">Search</button>
+	<input type="text" ng-model="term">&nbsp;<button class="btn btn-primary" ng-click="searchFor(term)">Search</button>
 </label>
 
-<div ng-show="results !== null">
-    <uib-pagination total-items="count"  max-size="maxSize" ng-model="currentPage" ng-change="pageChanged()"></uib-pagination>
+<div ng-show="count > -1 && results !== null">
+    <uib-pagination total-items="1000"  max-size="maxSize" ng-model="currentPage" ng-change="pageChanged()"></uib-pagination>
 </div>
 
 <div class="row marketing" ng-show="count > -1">

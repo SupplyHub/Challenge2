@@ -8,70 +8,77 @@
  * Controller of the supplyhubApp
  */
 angular.module('supplyhubApp')
-.controller('MainCtrl', ["$scope", "Search", function ($scope, Search) {
-	$scope.results = null
+.controller('MainCtrl', ["$scope", "Search", "$location", "$routeParams", function ($scope, Search, $location, $routeParams) {
+	
+
+console.info($routeParams);
+
+	$scope.results = null;
 	$scope.count = -1;
-	$scope.product = null;
-
-	$scope.searchFor = function(product){
-		$scope.product = product;
-		if (!product) {reset(); return;}
-		Search.searchFor(product).then(function(data){
-			if (data.statusCode === 404){
-				$scope.results = null
-			} else {
-				$scope.results = data;
-			}
-			console.info($scope.results);
-		});
- 		Search.getCountFor(product).then(function(data){
- 			$scope.count = data;
- 		});
-	}
-
+	$scope.product = $routeParams.product || null;
 	$scope.totalItems = 10;
-	$scope.currentPage = 2;
-
-	$scope.setPage = function (pageNo) {
-		$scope.currentPage = pageNo;
-	}
-
-	$scope.pageChanged = function() {
-		console.log('Page changed to: ' + $scope.currentPage);
-		if (!$scope.product){reset(); return;}
-		Search.searchFor($scope.product, ($scope.currentPage * $scope.totalItems)).then(function(data){
-			if (data.statusCode === 404){
-				$scope.results = null
-			} else {
-				$scope.results = data;
-			}
-			console.info($scope.results);
-		});
-	}
-
-	function reset(){
-		$scope.count = -1
-		$scope.results = null;
-	}
-
+	$scope.currentPage = $routeParams.currentPage || 1;
 	$scope.maxSize = 5;
 	$scope.bigTotalItems = 175;
 	$scope.bigCurrentPage = 1;
-}]);
 
-angular.module('supplyhubApp')
-	.config(function($httpProvider){
-		$httpProvider.interceptors.push('myHttpInterceptor');
-	})
-	.factory('myHttpInterceptor', function($q, $window){
-		return {
-	 		request: function(config){
-	 			console.log('Request started'); // LOG AT REQUEST START
-				return config || $q.when(config);
-			},
-			responseError: function(config){
-				return config;
-			}
-		};
-});
+	$scope.searchFor = startSearch;
+
+	
+
+	if ($scope.product){
+		searchFor($scope.product);
+	}
+
+	// $scope.$on('$routeUpdate', function(){
+	// 	console.info("upading");
+	//   $scope.sort = $location.search().sort;
+	// });
+
+	$scope.setPage = function (pageNo){
+		console.info("setting oage to "+ pageNo);
+		$scope.currentPage = pageNo;
+	};
+
+	$scope.pageChanged = function(){
+		console.log('Page changed to: ' + $scope.currentPage);
+		if (!$scope.product){reset(); return;}
+		search();
+		$location.search({'currentPage': $scope.currentPage, 'product': $scope.product});
+	};
+
+	function startSearch (product){
+		console.info("hey");
+		console.info(product);
+		$scope.currentPage = 1;
+		searchFor(product);
+	}
+
+	function reset(){
+		$scope.currentPage = 1;
+		$scope.count = -1;
+		$scope.results = null;
+		$location.search({});
+	}
+
+	function search(){
+		Search.searchFor($scope.product, ($scope.currentPage - 1) * $scope.totalItems).then(function(data){
+			if (data.statusCode === 404){
+				$scope.results = null;
+			} else {
+				$scope.results = data;
+			}			
+		});
+	}
+
+	function searchFor(product){
+		if (!product) {reset(); return;}
+		$scope.product = product;
+		search();
+ 		Search.getCountFor(product).then(function(data){
+ 			$scope.count = data;
+ 		});
+ 		$location.search({'currentPage': $scope.currentPage, 'product': $scope.product});
+	}
+}]);
  
