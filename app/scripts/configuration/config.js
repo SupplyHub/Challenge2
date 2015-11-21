@@ -8,7 +8,8 @@ angular.module('supplyhubApp')
 	},
 	data:
 		{
-			limit: 10
+			limit: 10,
+			maxSize: 5
 		}
 	}
 );
