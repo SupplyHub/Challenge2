@@ -8,7 +8,7 @@
  * Controller of the supplyhubApp
  */
 angular.module('supplyhubApp')
-.controller('MainCtrl', ["$scope", "Search", "$location", "$routeParams", function ($scope, Search, $location, $routeParams) {
+.controller('MainCtrl', ["$scope", "Search", "$location", "$routeParams", "CONFIG", function ($scope, Search, $location, $routeParams, CONFIG) {
 	
 
 console.info($routeParams);
@@ -16,11 +16,9 @@ console.info($routeParams);
 	$scope.results = null;
 	$scope.count = -1;
 	$scope.product = $routeParams.product || null;
-	$scope.totalItems = 10;
+	$scope.totalItems = CONFIG.data.limit;
 	$scope.currentPage = $routeParams.currentPage || 1;
-	$scope.maxSize = 5;
-	$scope.bigTotalItems = 175;
-	$scope.bigCurrentPage = 1;
+	$scope.maxSize = CONFIG.data.maxSize;
 
 	$scope.searchFor = startSearch;
 
@@ -30,10 +28,6 @@ console.info($routeParams);
 		searchFor($scope.product);
 	}
 
-	// $scope.$on('$routeUpdate', function(){
-	// 	console.info("upading");
-	//   $scope.sort = $location.search().sort;
-	// });
 
 	$scope.setPage = function (pageNo){
 		console.info("setting oage to "+ pageNo);
