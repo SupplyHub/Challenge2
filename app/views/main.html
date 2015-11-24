@@ -1,0 +1,15 @@
+<form>
+	<label>Search
+	<input type="text" ng-model="term">&nbsp;<button class="btn btn-primary" ng-click="searchFor(term)">Search</button>
+</label>
+
+<div ng-show="count > -1 && results !== null">
+    <uib-pagination total-items="count"  boundary-links="true" max-size="maxSize" ng-model="currentPage" ng-change="pageChanged()"></uib-pagination>
+</div>
+
+<div class="row marketing" ng-show="count > -1">
+	<h4>{{count}} results for &quot;{{product}}&quot;</h4>
+	<table class="table table-striped" ng-show="results !== null">
+		<tr ng-repeat="result in results"><td>{{result.brand.name}}</td><td>{{result.category.name}}</td><td>{{result.product.name}}</td></tr>
+	</table>
+</div>
