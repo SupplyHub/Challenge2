@@ -4,7 +4,7 @@
 </label>
 
 <div ng-show="count > -1 && results !== null">
-    <uib-pagination total-items="1000"  max-size="maxSize" ng-model="currentPage" ng-change="pageChanged()"></uib-pagination>
+    <uib-pagination total-items="1000"  boundary-links="true" max-size="maxSize" ng-model="currentPage" ng-change="pageChanged()"></uib-pagination>
 </div>
 
 <div class="row marketing" ng-show="count > -1">

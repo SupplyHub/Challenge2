@@ -48,8 +48,6 @@ console.info($routeParams);
 	};
 
 	function startSearch (product){
-		console.info("hey");
-		console.info(product);
 		$scope.currentPage = 1;
 		searchFor(product);
 	}
