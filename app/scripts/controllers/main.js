@@ -8,7 +8,7 @@
  * Controller of the supplyhubApp
  */
 angular.module('supplyhubApp')
-.controller('MainCtrl', ["$scope", "Search", "$location", "$routeParams", "CONFIG", function ($scope, Search, $location, $routeParams, CONFIG) {
+.controller('MainCtrl', ["$scope", "Search", "$location", "$routeParams", "CONFIG", "$q", function ($scope, Search, $location, $routeParams, CONFIG, $q) {
 	
 
 console.info($routeParams);
@@ -16,27 +16,26 @@ console.info($routeParams);
 	$scope.results = null;
 	$scope.count = -1;
 	$scope.product = $routeParams.product || null;
-	$scope.totalItems = CONFIG.data.limit;
 	$scope.currentPage = $routeParams.currentPage || 1;
 	$scope.maxSize = CONFIG.data.maxSize;
+	$scope.totalItems = CONFIG.data.limit;
 
 	$scope.searchFor = startSearch;
-
-	
 
 	if ($scope.product){
 		searchFor($scope.product);
 	}
 
-
 	$scope.setPage = function (pageNo){
-		console.info("setting oage to "+ pageNo);
+		console.info("setting page to "+ pageNo);
 		$scope.currentPage = pageNo;
 	};
 
 	$scope.pageChanged = function(){
-		console.log('Page changed to: ' + $scope.currentPage);
+		if ($scope.count === -1){return;}
 		if (!$scope.product){reset(); return;}
+		console.log('Page changed to: ' + $scope.currentPage);
+		console.info("count is " + $scope.count);
 		search();
 		$location.search({'currentPage': $scope.currentPage, 'product': $scope.product});
 	};
@@ -54,7 +53,8 @@ console.info($routeParams);
 	}
 
 	function search(){
-		Search.searchFor($scope.product, ($scope.currentPage - 1) * $scope.totalItems).then(function(data){
+		console.info("SEARCH!!!!!");
+		return Search.searchFor($scope.product, ($scope.currentPage - 1) * $scope.totalItems).then(function(data){
 			if (data.statusCode === 404){
 				$scope.results = null;
 			} else {
@@ -63,13 +63,26 @@ console.info($routeParams);
 		});
 	}
 
+	function count(){
+		return Search.getCountFor($scope.product).then(function(data){
+			console.info("got count of " + data);
+ 			$scope.count = data;
+ 		});
+	}
+
+	function setCurrentPage(){
+		var defer = $q.defer();
+		$scope.currentPage = $routeParams.currentPage || 1;
+		console.info("set current page tp  " + $scope.currentPage);
+		defer.resolve($scope.currentPage);
+		return defer.promise;
+	}
+
 	function searchFor(product){
 		if (!product) {reset(); return;}
 		$scope.product = product;
-		search();
- 		Search.getCountFor(product).then(function(data){
- 			$scope.count = data;
- 		});
+		count().then(setCurrentPage).then(search);
+ 		
  		$location.search({'currentPage': $scope.currentPage, 'product': $scope.product});
 	}
 }]);
